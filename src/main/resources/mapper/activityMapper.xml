@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhui.classspirit.mapper.ActivityMapper">
+
+    <select id="getActivitiesList" resultType="activityApply">
+        select a.activity_id, a.activity_name, a.activity_image, a.activity_content, a.start_time, a.pub_time,
+        a.class_id, c.class_name, u.user_name
+        from activity a
+        left join user u
+        on a.user_id = u.user_id
+        left join classes c
+        on a.class_id = c.class_id
+        left join apply ap
+        on a.activity_id = ap.activity_id
+        <where>
+            <if test="classId != null and classId != '' and classId != 'all'">
+                AND a.class_id = #{classId}
+            </if>
+
+            <if test="type != null and type == 4">
+                AND a.start_time > NOW()
+            </if>
+            <if test="type != null and type == 3">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="type != null and type == 1">
+                AND ap.user_id = #{userId}
+            </if>
+
+            <if test="requestTime != null and requestTime != ''">
+                AND DATE_FORMAT(#{requestTime},
+                '%y-%m-%d %h:%i'
+                ) >= DATE_FORMAT(a.pub_time,
+                '%y-%m-%d %h:%i'
+                )
+            </if>
+        </where>
+        GROUP BY a.activity_id
+        ORDER BY
+        <if test="sort != null and sort == 1">
+            a.pub_time
+        </if>
+        <if test="sort != null and sort == 0">
+            a.start_time
+        </if>
+        DESC
+        <if test="offset != null and pageSize != null">
+            limit #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getActivitiesLists" resultType="activityApply">
+        select a.activity_id, a.activity_name, a.activity_image, a.activity_content, a.start_time, a.pub_time,
+        a.class_id, c.class_name, u.user_name
+        from activity a
+        left join user u
+        on a.user_id = u.user_id
+        left join classes c
+        on a.class_id = c.class_id
+        <where>
+            <if test="classId != null and classId != '' and classId != 'all'">
+                AND a.class_id = #{classId}
+            </if>
+
+            <if test="requestTime != null and requestTime != ''">
+                AND #{requestTime} >= a.pub_time
+            </if>
+
+            <if test="type != null and type != ''">
+                AND a.activity_id
+                not in (
+                select ac.activity_id
+                from activity ac
+                left join apply ap
+                on ac.activity_id = ap.activity_id
+                <where>
+                    <if test="classId != null and classId != '' and classId != 'all'">
+                        AND ac.class_id = #{classId}
+                    </if>
+
+                    <if test="requestTime != null and requestTime != ''">
+                        AND #{requestTime} >= ac.pub_time
+                    </if>
+
+                    <if test="userType != null and userType == 2">
+                        AND ap.user_id = #{userId}
+                    </if>
+                </where>
+                GROUP BY ac.activity_id
+                )
+            </if>
+        </where>
+        ORDER BY
+        <if test="sort != null and sort == 1">
+            a.pub_time
+        </if>
+        <if test="sort != null and sort == 0">
+            a.start_time
+        </if>
+        DESC
+        <if test="offset != null and pageSize != null">
+            limit #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <insert id="insertActivity">
+        insert into activity(activity_name, activity_image, activity_content, user_id, class_id, pub_time, start_time)
+        values
+        (#{activityName},#{activityImage},#{activityContent},#{userId},#{classId},#{pubTime},#{startTime})
+    </insert>
+
+    <select id="verifyTime" resultType="activity">
+        select start_time
+        from activity
+        where activity_id = #{activityId}
+    </select>
+
+    <select id="getActivityByActivityId" resultType="activityApply">
+        select count(ap.apply_id) as personCount, a.activity_id, a.activity_name, a.activity_image,
+        a.activity_content, a.start_time, a.pub_time, a.class_id, a.user_id, c.class_name
+        from activity a
+        left join classes c
+        on a.class_id = c.class_id
+        left join apply ap
+        on a.activity_id = ap.activity_id
+        where a.activity_id = #{activityId}
+    </select>
+</mapper>

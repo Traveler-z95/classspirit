@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhui.classspirit.mapper.UserMapper">
+
+    <select id="getTeacherByClassId" resultType="user">
+        SELECT user_name, user_phone, user_type, user_image FROM user
+        <where>
+            1=1 and class_id = #{classId} and user_type BETWEEN 0 AND 1
+        </where>
+    </select>
+
+    <select id="getUserInfoByUserId" resultType="user">
+        SELECT u.*,s.student_name,c.class_name
+        FROM user u
+        LEFT JOIN student s
+        ON u.student_id = s.student_id
+        LEFT JOIN classes c
+        ON u.class_id = c.class_id
+        WHERE user_id = #{userId}
+    </select>
+
+    <update id="updateUserInfo">
+        UPDATE user
+        <set>
+            <if test="userPhone != null and userPhone !=''">
+                user_phone = #{userPhone},
+            </if>
+            <if test="userImage != null and userImage !=''">
+                user_image = #{userImage},
+            </if>
+            <if test="userType != null and userType !=''">
+                user_type = #{userType},
+            </if>
+            <if test="userName != null and userName !=''">
+                user_name = #{userName},
+            </if>
+            <if test="studentId != null and studentId !=''">
+                student_id = #{studentId},
+            </if>
+            <if test="classId != null and classId !=''">
+                class_id = #{classId}
+            </if>
+        </set>
+        WHERE user_id = #{userId}
+
+    </update>
+
+    <select id="verifyUser" resultType="user">
+        SELECT * FROM user WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO user(user_id, user_image, user_type, user_name)
+        VALUES(#{userId}, #{userImage}, #{userType}, #{userName})
+    </insert>
+
+    <select id="getUserName" resultType="user">
+        select user_name from user where user_id = #{userId}
+    </select>
+</mapper>

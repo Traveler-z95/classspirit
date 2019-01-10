@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhui.classspirit.mapper.StudentMapper">
+
+    <select id="getStudentByClassId" resultType="student">
+        SELECT student_id, student_name, student_class, student_image FROM student
+        <where>
+            1=1 and student_class = #{classId}
+        </where>
+    </select>
+
+</mapper>

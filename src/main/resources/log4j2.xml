@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <properties>
+        <!-- 文件输出格式 -->
+        <property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} |-%-5level [%thread] %c [%L] -| %msg%n</property>
+    </properties>
+
+    <appenders>
+        <Console name="Console" target="system_out">
+            <PatternLayout pattern="${PATTERN}" />
+        </Console>
+    </appenders>
+    <!--配置mybatis日志-->
+    <loggers>
+
+        <logger name="log4j.logger.org.mybatis" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="log4j.logger.java.sql" level="debug" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.jinhui.classspirit.mapper" level="debug" />
+        <root level="info">
+            <appenderref ref="Console" />
+        </root>
+    </loggers>
+
+</configuration>

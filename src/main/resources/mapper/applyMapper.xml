@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinhui.classspirit.mapper.ApplyMapper">
+    <select id="getApplyCountByActivityId" resultType="activityApply">
+      select count(activity_id) as personCount from apply where activity_id = #{activityId}
+    </select>
+
+    <select id="getAppliesListByActivityId" resultType="activityApply">
+      select a.user_id, a.image, u.user_name, a.punch_time, u.user_image, u.user_phone
+      from apply  a
+      left join user u
+      on a.user_id = u.user_id
+      where a.activity_id = #{activityId}
+      order by a.punch_time desc
+    </select>
+
+    <select id="verifyApply" resultType="apply">
+        select *
+        from apply
+        where user_id = #{userId} and activity_id = #{activityId}
+    </select>
+
+    <insert id="insertApply">
+        insert into apply(activity_id, user_id, image, punch_time)
+        VALUES
+        (#{activityId},#{userId},#{image},#{punchTime})
+    </insert>
+
+</mapper>
