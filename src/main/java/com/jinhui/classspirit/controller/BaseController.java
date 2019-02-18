@@ -50,10 +50,10 @@ public abstract class BaseController {
     public static boolean deleteServerFile(String filePath){
         boolean deleteFlag = false;
         File file = new File(filePath);
-        if (file.exists() && file.isFile() && file.delete())
-            deleteFlag = true;
-        else
-            deleteFlag = false;
+        if (file.exists() && file.isFile() && file.delete()){
+            deleteFlag = true;}
+        else{
+            deleteFlag = false;}
         return deleteFlag;
     }
 
