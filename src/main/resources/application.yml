@@ -4,9 +4,6 @@ spring:
     url: jdbc:mysql://localhost:3306/classspirit?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
     username: root
     password: 123456
-#    url: jdbc:mysql://192.168.98.9:63306/classspirit?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: jinhui12138
     driver-class-name: com.mysql.jdbc.Driver
 #    SpringBoot 2.1.x 新特性
 #    driver-class-name: com.mysql.cj.jdbc.Driver
